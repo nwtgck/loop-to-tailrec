@@ -15,6 +15,8 @@
       <code ng-controller='codeCtrl'>
 
 
+        <button ng-click='load_empty_setting()'>Load empty setting</button><br>
+        <button ng-click='load_fact_setting()'>Load fact (n!) setting</button><br>
         <button ng-click='load_fib_setting()'>Load fib setting</button><br>
 
         <div style='border:solid 1px; padding: 10px'>
@@ -89,11 +91,11 @@
         <span ng-bind-html='indent(2)'></span>
         {{func_name}}' i
         <span ng-repeat='local_var in local_vars'>
-          prev_{{local_var.name}}
+          {{local_var.name}}
         </span>
         = {{func_name}}' (i - {{loop_dec_value}})
         <span ng-repeat='local_var in local_vars'>
-          ({{local_var.update_value}})
+          ({{erase_prev(local_var.update_value)}})
         </span>
       </div>
 

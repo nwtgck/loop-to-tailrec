@@ -2,7 +2,7 @@ angular.module('APP', ['ngSanitize'])
   .controller('codeCtrl', ['$scope', function($scope){
 
     $scope.indent = function(times){
-      return '&nbsp;&nbsp;&nbsp;&nbsp;'.repeat(times);
+      return '&nbsp;&nbsp;'.repeat(times);
     };
 
     // Function name
@@ -44,10 +44,42 @@ angular.module('APP', ['ngSanitize'])
     // Loop dec value
     $scope.loop_dec_value = '1';
 
+    // Function's return-value
     $scope.ret_val = '';
+
+    // Erase prev prefix
+    $scope.erase_prev = function(var_name){
+      return var_name.replace(/prev_/g, '');
+    };
 
 
     // Example setting
+    $scope.load_empty_setting = function(){
+      $scope.func_name = '';
+      $scope.params = [];
+      $scope.local_vars = [];
+      $scope.loop_begin = '';
+      $scope.loop_min   = '';
+      $scope.loop_dec_value = '';
+      $scope.ret_val = '';
+    };
+
+    // factorial
+    $scope.load_fact_setting = function(){
+      $scope.func_name = 'fact';
+      $scope.params = [{name: "n"}];
+      $scope.local_vars = [
+        {name: "res", init_value: "1", update_value: "res*m"},
+        {name: "m", init_value: "n", update_value: "m-1"}
+      ];
+      $scope.loop_begin = 'n';
+      $scope.loop_min   = '0';
+      $scope.loop_dec_value = '1';
+      $scope.ret_val = 'res';
+    };
+
+
+    // fib
     $scope.load_fib_setting = function(){
       $scope.func_name = 'fib';
       $scope.params = [{name: "n"}];
@@ -59,7 +91,6 @@ angular.module('APP', ['ngSanitize'])
       $scope.loop_min   = '0';
       $scope.loop_dec_value = '1';
       $scope.ret_val = 'a';
-
     };
 
   }]);
