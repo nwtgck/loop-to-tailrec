@@ -3,6 +3,10 @@ for-to-tailrec
 
 Convertor a for-loop to a tail-recursive func
 
+# Demo
+
+![](./demo-images/demo1.gif)
+
 # Page
 
 http://nwtgck.github.io/for-to-tailrec/
