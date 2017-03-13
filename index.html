@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html ng-app='APP'>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>for-to-tailrec</title>
+    <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular-sanitize.min.js'></script>
+
+    <script>
+      angular.module('APP', ['ngSanitize'])
+        .controller('codeCtrl', ['$scope', function($scope){
+
+          $scope.indent = function(times){
+            return '&nbsp;&nbsp;&nbsp;&nbsp;'.repeat(times);
+          };
+
+          // Function name
+          $scope.func_name = '';
+
+          // Function params
+          $scope.params = [];
+
+          // Add a param
+          $scope.add_param = function(){
+            $scope.params.push({name: ""});
+          };
+
+          // Remove the param specified by a index
+          $scope.remove_param_by_idx = function(idx){
+            $scope.params.splice(idx, 1);
+          };
+
+
+          // Local variables
+          $scope.local_vars = [];
+
+          // Add a local variable
+          $scope.add_local_var = function(){
+            $scope.local_vars.push({name: "", init_value: "", update_value: ""});
+          };
+
+          // Remove the local variable specified by a index
+          $scope.remove_local_var_by_idx = function(idx){
+            $scope.local_vars.splice(idx, 1);
+          };
+
+          // Loop i begin value
+          $scope.loop_begin = '';
+
+          // Loop i min value
+          $scope.loop_min  = '';
+
+          // Loop dec value
+          $scope.loop_dec_value = '1';
+
+          $scope.ret_val = '';
+
+
+          // Example setting
+          $scope.load_fib_setting = function(){
+            $scope.func_name = 'fib';
+            $scope.params = [{name: "n"}];
+            $scope.local_vars = [
+              {name: "a", init_value: "1", update_value: "prev_b"},
+              {name: "b", init_value: "1", update_value: "prev_a+prev_b"}
+            ];
+            $scope.loop_begin = 'n';
+            $scope.loop_min   = '0';
+            $scope.loop_dec_value = '1';
+            $scope.ret_val = 'a';
+
+          };
+
+        }]);
+    </script>
+    <style media="screen">
+
+    </style>
+  </head>
+  <body>
+      <code ng-controller='codeCtrl'>
+
+
+        <button ng-click='load_fib_setting()'>Load fib setting</button><br>
+
+        <div style='border:solid 1px; padding: 10px'>
+
+          int <input ng-model='func_name' placeholder='func name' size='8'>(<br>
+          <span ng-bind-html='indent(1)'></span>
+          <button ng-click='add_param()'>+ local param</button><br>
+
+
+          <div ng-repeat='param in params'>
+            <span ng-bind-html='indent(1)'></span>
+            int <input ng-model='param.name' size='6' placeholder='param' >
+            <button ng-click='remove_param_by_idx($index)'>remove</button>
+            <span ng-hide='$last'>,</span>
+          </div>
+
+          ){<br>
+
+          <span ng-bind-html='indent(1)'></span>
+          <button ng-click='add_local_var()'>+ local var</button><br>
+
+          <div ng-repeat='local_var in local_vars'>
+            <span ng-bind-html='indent(1)'></span>
+            int <input placeholder='local var' ng-model='local_var.name' size='4'> = <input placeholder='init val' ng-model='local_var.init_value' size='4'>;
+            <button ng-click='remove_local_var_by_idx($index)'>remove</button>
+          </div>
+
+          <span ng-bind-html='indent(1)'></span>
+          for(int i = <input ng-model='loop_begin' size='4'>; i > <input ng-model='loop_min' size='4'>; i -= <input ng-model='loop_dec_value' size='4'>){<br>
+            <!-- prev_xx = xx -->
+            <div ng-repeat='local_var in local_vars'>
+              <span ng-bind-html='indent(2)'></span>
+              int prev_{{local_var.name}} = {{local_var.name}};
+            </div>
+
+            <!-- Update local vars -->
+            <div ng-repeat='local_var in local_vars'>
+              <span ng-bind-html='indent(2)'></span>
+              {{local_var.name}} = <input ng-model='local_var.update_value'>;
+            </div>
+
+          <span ng-bind-html='indent(1)'></span>
+          }<br>
+
+          <span ng-bind-html='indent(1)'></span>
+          return <input ng-model='ret_val' placeholder='return value'>;<br>
+        }<br>
+
+      </div>
+
+      <div style='border:solid 1px; padding: 10px'>
+        -- Haskell<br>
+        {{func_name}}
+        <span ng-repeat='param in params'>
+          {{param.name}}
+        </span>
+        = {{func_name}}' {{loop_begin}}
+        <span ng-repeat='local_var in local_vars'>
+          {{local_var.init_value}}
+        </span><br>
+        <span ng-bind-html='indent(1)'></span>
+        where<br>
+
+
+        <span ng-bind-html='indent(2)'></span>
+        {{func_name}}' {{loop_min}}
+        <span ng-repeat='local_var in local_vars'>
+          {{local_var.name}}
+        </span>
+        = {{ret_val}}<br>
+
+        <span ng-bind-html='indent(2)'></span>
+        {{func_name}}' i
+        <span ng-repeat='local_var in local_vars'>
+          prev_{{local_var.name}}
+        </span>
+        = {{func_name}}' (i - {{loop_dec_value}})
+        <span ng-repeat='local_var in local_vars'>
+          ({{local_var.update_value}})
+        </span>
+      </div>
+
+      <div style='border:solid 1px; padding: 10px'>
+
+        // C for comfirmation<br>
+
+        int {{func_name}}(
+
+        <span ng-repeat='param in params'>
+          int {{param.name}}
+          <span ng-hide='$last'>,</span>
+        </span>
+
+        ){<br>
+
+        <div ng-repeat='local_var in local_vars'>
+          <span ng-bind-html='indent(1)'></span>
+          int {{local_var.name}} = {{local_var.init_value}};
+        </div>
+
+        <span ng-bind-html='indent(1)'></span>
+        for(int i = {{loop_begin}}; i > {{loop_min}}; i -= {{loop_dec_value}}){<br>
+          <!-- prev_xx = xx -->
+          <div ng-repeat='local_var in local_vars'>
+            <span ng-bind-html='indent(2)'></span>
+            int prev_{{local_var.name}} = {{local_var.name}};
+          </div>
+
+          <!-- Update local vars -->
+          <div ng-repeat='local_var in local_vars'>
+            <span ng-bind-html='indent(2)'></span>
+            {{local_var.name}} = {{local_var.update_value}};
+          </div>
+
+        <span ng-bind-html='indent(1)'></span>
+        }<br>
+
+        <span ng-bind-html='indent(1)'></span>
+        return {{ret_val}};<br>
+      }<br>
+
+    </div>
+
+      </code>
+  </body>
+</html>
