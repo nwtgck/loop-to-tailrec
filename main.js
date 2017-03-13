@@ -64,6 +64,19 @@ angular.module('APP', ['ngSanitize'])
       $scope.ret_val = '';
     };
 
+    // power (a^n)
+    $scope.load_pow_setting = function(){
+      $scope.func_name = 'power';
+      $scope.params = [{name: "a"}, {name: "n"}];
+      $scope.local_vars = [
+        {name: "res", init_value: "1", update_value: "res*a"},
+      ];
+      $scope.loop_begin = 'n';
+      $scope.loop_min   = '0';
+      $scope.loop_dec_value = '1';
+      $scope.ret_val = 'res';
+    };
+
     // factorial
     $scope.load_fact_setting = function(){
       $scope.func_name = 'fact';
