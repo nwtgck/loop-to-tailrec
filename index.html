@@ -12,13 +12,12 @@
     </style>
   </head>
   <body>
+
+      <h1>Convert For-loop to a tail-recursive func</h1>
       <code ng-controller='codeCtrl'>
 
-
-        <button ng-click='load_empty_setting()'>Load empty setting</button><br>
-        <button ng-click='load_pow_setting()'>Load power (a^n) setting</button><br>
-        <button ng-click='load_fact_setting()'>Load fact (n!) setting</button><br>
-        <button ng-click='load_fib_setting()'>Load fib setting</button><br>
+        Examples:
+        <select ng-model='current_setting' ng-options="example_setting.name for example_setting in example_settings" ng-change='current_setting.func()'></select>
 
         <div style='border:solid 1px; padding: 10px'>
 

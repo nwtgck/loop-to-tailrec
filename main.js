@@ -52,9 +52,19 @@ angular.module('APP', ['ngSanitize'])
       return var_name.replace(/prev_/g, '');
     };
 
+    // Example settings
+    $scope.example_settings = [
+      {name: "Empty setting", func: load_empty_setting},
+      {name: "Power(a^n)",    func: load_pow_setting},
+      {name: "Factorial(n!)", func: load_fact_setting},
+      {name: "Fibonacci",     func: load_fib_setting},
+    ];
+
+    // Selected example setting
+    $scope.current_setting = $scope.example_settings[0];
 
     // Example setting
-    $scope.load_empty_setting = function(){
+    function load_empty_setting(){
       $scope.func_name = '';
       $scope.params = [];
       $scope.local_vars = [];
@@ -65,7 +75,7 @@ angular.module('APP', ['ngSanitize'])
     };
 
     // power (a^n)
-    $scope.load_pow_setting = function(){
+    function load_pow_setting(){
       $scope.func_name = 'power';
       $scope.params = [{name: "a"}, {name: "n"}];
       $scope.local_vars = [
@@ -78,7 +88,7 @@ angular.module('APP', ['ngSanitize'])
     };
 
     // factorial
-    $scope.load_fact_setting = function(){
+    function load_fact_setting(){
       $scope.func_name = 'fact';
       $scope.params = [{name: "n"}];
       $scope.local_vars = [
@@ -93,7 +103,7 @@ angular.module('APP', ['ngSanitize'])
 
 
     // fib
-    $scope.load_fib_setting = function(){
+    function load_fib_setting(){
       $scope.func_name = 'fib';
       $scope.params = [{name: "n"}];
       $scope.local_vars = [
