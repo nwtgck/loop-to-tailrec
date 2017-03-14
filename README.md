@@ -1,4 +1,4 @@
-for-to-tailrec
+loop-to-tailrec
 ==
 
 Convertor a while-loop to a tail-recursive function
