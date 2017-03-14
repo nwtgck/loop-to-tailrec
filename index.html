@@ -28,7 +28,7 @@
           <button ng-click='add_type_param()'>+ type param</button><br>
           <div ng-repeat='type_param in type_params'>
             <span ng-bind-html='indent(1)'></span>
-            <input ng-model='type_param.name'> <button ng-click='remove_type_param_by_idx($index)'></button>
+            <input ng-model='type_param.name'> <button ng-click='remove_type_param_by_idx($index)'>remove</button>
             <span ng-hide='$last'>,</span>
           </div>
           <span ng-show='type_params.length > 0'>]</span>

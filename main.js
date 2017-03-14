@@ -22,6 +22,11 @@ angular.module('APP', ['ngSanitize'])
       $scope.type_params.push({name: ""});
     };
 
+    // Remove the type param specified by a index
+    $scope.remove_type_param_by_idx = function(idx){
+      $scope.type_params.splice(idx, 1);
+    };
+
     // Add a param
     $scope.add_param = function(){
       $scope.params.push({name: "", type: ""});
