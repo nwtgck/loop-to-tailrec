@@ -1,7 +1,7 @@
 for-to-tailrec
 ==
 
-Convertor a for-loop to a tail-recursive func
+Convertor a while-loop to a tail-recursive function
 
 # Demo
 
@@ -9,62 +9,83 @@ Convertor a for-loop to a tail-recursive func
 
 # Page
 
-http://nwtgck.github.io/for-to-tailrec/
+http://nwtgck.github.io/loop-to-tailrec/
 
 # What is this?
 
-Convert the following format for-loop to a tail-rec function!
+Convert the following format while-loop to a tail-rec function!
 
-```c
-int <funcname>(int p1, int p2, <... int pn>){
-   int local1 = _;
-   int local2 = _;
-   ...
-   int localn = _;
-   for(int i = [begin]; i > [end]; i -= [dec]){
-     int prev_local1 = local1;
-     int prev_local2 = local2;
-     ...
-     int prev_localn = localn;
+# Example1 - Fibonacci
 
-     local1 = _
-     local2 = _
-     ...
-     localn = _
+### Input (while-loop)
+
+```scala
+def fib ( n: Int ): Int = {
+   var i: Int = 0
+   var a: Int = 1
+   var b: Int = 1
+   while(i < n){
+     val prev_i = i
+     val prev_a = a
+     val prev_b = b
+     i = i+1
+     a = prev_b
+     b = prev_a+prev_b
    }
-   return [ret-value];
-}
-```
-
-# Example - Fibonacci
-
-
-### C code
-
-```c
-int fib( int n ){
-   int a = 1;
-   int b = 1;
-   for(int i = n; i > 0; i -= 1){
-     int prev_a = a;
-     int prev_b = b;
-     a = prev_b;
-     b = prev_a+prev_b;
-   }
-   return a;
+   a
 }
 ```
 
 ==>
 
-### Output (Haskell)
+### Output (tailrec)
 
-```haskell
--- Haskell
-fib n = fib' n 1 1
-   where
-     fib' 0 a b = a
-     fib' i a b = fib' (i - 1) (b) (a+b)
+```scala
+// Scala(tailrec)
+def fib ( n: Int ): Int = {
+   import scala.annotation.tailrec
+   @tailrec
+   def _fib( i: Int , a: Int , b: Int ): Int = {
+     if(i < n) _fib( i+1 , b , a+b )
+     else a
+   }
+   _fib( 0 , 1 , 1 )
+}
+```
+
+# Example2 - foldLeft
+
+### Input (while-loop)
+
+```scala
+def foldLeft [ E , A ] ( seq: Seq[E] , zero: A , f: (A, E) => A ): A = {
+   var accum: A = zero
+   var i: Int = 0
+   while(i < seq.length){
+     val prev_accum = accum
+     val prev_i = i
+     accum = f(accum, seq(i))
+     i = i + 1
+   }
+   accum
+}
+```
+
+==>
+
+### Output (tailrec)
+
+```scala
+// Scala(tailrec)
+def foldLeft [ E , A ] ( seq: Seq[E] , zero: A , f: (A, E) => A ): A = {
+   import scala.annotation.tailrec
+   @tailrec
+   def _foldLeft( accum: A , i: Int ): A = {
+     if(i < seq.length) _foldLeft( f(accum, seq(i)) , i + 1 )
+     else accum
+   }
+   _foldLeft( zero , 0 )
+}
 ```
 
 You can access http://nwtgck.github.io/for-to-tailrec/ and try other examples!
