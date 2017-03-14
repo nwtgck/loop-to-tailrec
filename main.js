@@ -8,12 +8,23 @@ angular.module('APP', ['ngSanitize'])
     // Function name
     $scope.func_name = '';
 
+    // Function type params
+    $scope.type_params = [];
+
     // Function params
     $scope.params = [];
 
+    // Function return-type
+    $scope.ret_type = '';
+
+    // Add a type param
+    $scope.add_type_param = function(){
+      $scope.type_params.push({name: ""});
+    };
+
     // Add a param
     $scope.add_param = function(){
-      $scope.params.push({name: ""});
+      $scope.params.push({name: "", type: ""});
     };
 
     // Remove the param specified by a index
@@ -27,7 +38,7 @@ angular.module('APP', ['ngSanitize'])
 
     // Add a local variable
     $scope.add_local_var = function(){
-      $scope.local_vars.push({name: "", init_value: "", update_value: ""});
+      $scope.local_vars.push({name: "", type: "", init_value: "", update_value: ""});
     };
 
     // Remove the local variable specified by a index
@@ -35,13 +46,16 @@ angular.module('APP', ['ngSanitize'])
       $scope.local_vars.splice(idx, 1);
     };
 
-    // Loop i begin value
+    // A condition in while-loop
+    $scope.while_cond = '';
+
+    // Loop i begin value TODO remove
     $scope.loop_begin = '';
 
-    // Loop i min value
+    // Loop i min value TODO remove
     $scope.loop_min  = '';
 
-    // Loop dec value
+    // Loop dec value TODO remove
     $scope.loop_dec_value = '1';
 
     // Function's return-value
@@ -58,6 +72,9 @@ angular.module('APP', ['ngSanitize'])
       {name: "Power(a^n)",    func: load_pow_setting},
       {name: "Factorial(n!)", func: load_fact_setting},
       {name: "Fibonacci",     func: load_fib_setting},
+      {name: 'foldLeft',      func: load_foldl_setting},
+      {name: 'foldRight',      func: load_foldr_setting}
+
     ];
 
     // Selected example setting
@@ -66,38 +83,40 @@ angular.module('APP', ['ngSanitize'])
     // Example setting
     function load_empty_setting(){
       $scope.func_name = '';
+      $scope.type_params = [];
       $scope.params = [];
+      $scope.ret_type = '';
       $scope.local_vars = [];
-      $scope.loop_begin = '';
-      $scope.loop_min   = '';
-      $scope.loop_dec_value = '';
+      $scope.while_cond = '';
       $scope.ret_val = '';
     };
 
     // power (a^n)
     function load_pow_setting(){
       $scope.func_name = 'power';
-      $scope.params = [{name: "a"}, {name: "n"}];
+      $scope.type_params = [];
+      $scope.params = [{name: "a", type: "Int"}, {name: "n", type: "Int"}];
+      $scope.ret_type = 'Int';
       $scope.local_vars = [
-        {name: "res", init_value: "1", update_value: "res*a"},
+        {name: "i", type: "Int", init_value: "0", update_value: "i+1"},
+        {name: "res", type: "Int", init_value: "1", update_value: "res*a"},
       ];
-      $scope.loop_begin = 'n';
-      $scope.loop_min   = '0';
-      $scope.loop_dec_value = '1';
+      $scope.while_cond = 'i < n';
       $scope.ret_val = 'res';
     };
 
     // factorial
     function load_fact_setting(){
       $scope.func_name = 'fact';
-      $scope.params = [{name: "n"}];
+      $scope.type_params = [];
+      $scope.params = [{name: "n", type: "Int"}];
+      $scope.ret_type = 'Int';
       $scope.local_vars = [
-        {name: "res", init_value: "1", update_value: "res*m"},
-        {name: "m", init_value: "n", update_value: "m-1"}
+        {name: "i", type: "Int", init_value: "0", update_value: "i+1"},
+        {name: "res", type: "Int", init_value: "1", update_value: "res*m"},
+        {name: "m", type: "Int", init_value: "n", update_value: "m-1"}
       ];
-      $scope.loop_begin = 'n';
-      $scope.loop_min   = '0';
-      $scope.loop_dec_value = '1';
+      $scope.while_cond = 'i < n';
       $scope.ret_val = 'res';
     };
 
@@ -105,15 +124,54 @@ angular.module('APP', ['ngSanitize'])
     // fib
     function load_fib_setting(){
       $scope.func_name = 'fib';
-      $scope.params = [{name: "n"}];
+      $scope.type_params = [];
+      $scope.params = [{name: "n", type: "Int"}];
+      $scope.ret_type = 'Int';
       $scope.local_vars = [
-        {name: "a", init_value: "1", update_value: "prev_b"},
-        {name: "b", init_value: "1", update_value: "prev_a+prev_b"}
+        {name: "i", type: "Int", init_value: "0", update_value: "i+1"},
+        {name: "a", type: "Int", init_value: "1", update_value: "prev_b"},
+        {name: "b", type: "Int", init_value: "1", update_value: "prev_a+prev_b"}
       ];
-      $scope.loop_begin = 'n';
-      $scope.loop_min   = '0';
-      $scope.loop_dec_value = '1';
+      $scope.while_cond = 'i < n';
       $scope.ret_val = 'a';
+    };
+
+    // foldLeft
+    function load_foldl_setting(){
+      $scope.func_name = 'foldLeft';
+      $scope.type_params = [{name: 'E'},{name: 'A'}];
+      $scope.params = [
+        {name: "seq", type: 'Seq[E]'},
+        {name: "zero",  type: 'A'},
+        {name: "f",     type: '(A, E) => A'},
+      ];
+      $scope.while_cond = 'i < seq.length'
+      $scope.ret_type = 'A';
+      $scope.local_vars = [
+        {name: "accum", type: 'A', init_value: "zero", update_value: "f(accum, seq(i))"},
+        {name: "i",     type: 'Int', init_value: "0", update_value: "i + 1"}
+      ];
+
+      $scope.ret_val = 'accum';
+    };
+
+    // foldRight
+    function load_foldr_setting(){
+      $scope.func_name = 'foldRight';
+      $scope.type_params = [{name: 'E'},{name: 'A'}];
+      $scope.params = [
+        {name: "seq", type: 'Seq[E]'},
+        {name: "zero",  type: 'A'},
+        {name: "f",     type: '(E, A) => A'},
+      ];
+      $scope.while_cond = 'i >= 0';
+      $scope.ret_type = 'A';
+      $scope.local_vars = [
+        {name: "accum", type: 'A', init_value: "zero", update_value: "f(seq(i), accum)"},
+        {name: "i",     type: 'Int', init_value: "seq.length-1", update_value: "i - 1"}
+      ];
+
+      $scope.ret_val = 'accum';
     };
 
   }]);

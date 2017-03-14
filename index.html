@@ -13,7 +13,7 @@
   </head>
   <body>
 
-      <h1>Convert For-loop to a tail-recursive func</h1>
+      <h1>[ver. General] Convert a for-loop to a tail-recursive func</h1>
       <code ng-controller='codeCtrl'>
 
         Examples:
@@ -21,124 +21,176 @@
 
         <div style='border:solid 1px; padding: 10px'>
 
-          int <input ng-model='func_name' placeholder='func name' size='8'>(<br>
+          def <input ng-model='func_name' placeholder='func name' size='8'>
+          <span ng-show='type_params.length > 0'>[</span>
+          <br>
           <span ng-bind-html='indent(1)'></span>
-          <button ng-click='add_param()'>+ local param</button><br>
+          <button ng-click='add_type_param()'>+ type param</button><br>
+          <div ng-repeat='type_param in type_params'>
+            <span ng-bind-html='indent(1)'></span>
+            <input ng-model='type_param.name'> <button ng-click='remove_type_param_by_idx($index)'></button>
+            <span ng-hide='$last'>,</span>
+          </div>
+          <span ng-show='type_params.length > 0'>]</span>
+          (<br>
+          <span ng-bind-html='indent(1)'></span>
+          <button ng-click='add_param()'>+ param</button><br>
 
 
           <div ng-repeat='param in params'>
             <span ng-bind-html='indent(1)'></span>
-            int <input ng-model='param.name' size='6' placeholder='param' >
+            <input ng-model='param.name' size='6' placeholder='param' >: <input ng-model='param.type' size='6' placeholder='type' >
             <button ng-click='remove_param_by_idx($index)'>remove</button>
             <span ng-hide='$last'>,</span>
           </div>
 
-          ){<br>
+          ): <input ng-model="ret_type" placeholder="return-type" size='8'> =
+          {<br>
 
           <span ng-bind-html='indent(1)'></span>
           <button ng-click='add_local_var()'>+ local var</button><br>
 
           <div ng-repeat='local_var in local_vars'>
             <span ng-bind-html='indent(1)'></span>
-            int <input placeholder='local var' ng-model='local_var.name' size='4'> = <input placeholder='init val' ng-model='local_var.init_value' size='4'>;
+            var <input placeholder='name' ng-model='local_var.name' size='8'>
+            :
+            <input placeholder='type' ng-model='local_var.type' size='6'>
+             =
+            <input placeholder='initial' ng-model='local_var.init_value' size='6'>
             <button ng-click='remove_local_var_by_idx($index)'>remove</button>
           </div>
 
           <span ng-bind-html='indent(1)'></span>
-          for(int i = <input ng-model='loop_begin' size='4'>; i > <input ng-model='loop_min' size='4'>; i -= <input ng-model='loop_dec_value' size='4'>){<br>
+          while(<input ng-model='while_cond' placeholder="condition">){<br>
             <!-- prev_xx = xx -->
             <div ng-repeat='local_var in local_vars'>
               <span ng-bind-html='indent(2)'></span>
-              int prev_{{local_var.name}} = {{local_var.name}};
+              val prev_{{local_var.name}} = {{local_var.name}}
             </div>
 
             <!-- Update local vars -->
             <div ng-repeat='local_var in local_vars'>
               <span ng-bind-html='indent(2)'></span>
-              {{local_var.name}} = <input ng-model='local_var.update_value'>;
+              {{local_var.name}} = <input ng-model='local_var.update_value'>
             </div>
 
           <span ng-bind-html='indent(1)'></span>
           }<br>
 
           <span ng-bind-html='indent(1)'></span>
-          return <input ng-model='ret_val' placeholder='return value'>;<br>
+          <input ng-model='ret_val' placeholder='return value'><br>
         }<br>
 
       </div>
 
-      <div style='border:solid 1px; padding: 10px'>
-        -- Haskell<br>
-        {{func_name}}
+      <div style='border:solid 1px; padding: 10px; background-color: #F5F6CE'>
+        // Scala(tailrec)<br>
+        def {{func_name}}
+        <span ng-show='type_params.length > 0'>[</span>
+        <span ng-repeat='type_param in type_params'>
+          {{type_param.name}}
+          <span ng-hide='$last'>, </span>
+        </span>
+        <span ng-show='type_params.length > 0'>]</span>
+        (
         <span ng-repeat='param in params'>
-          {{param.name}}
+          {{param.name}}: {{param.type}}
+          <span ng-hide='$last'>, </span>
         </span>
-        = {{func_name}}' {{loop_begin}}
-        <span ng-repeat='local_var in local_vars'>
-          {{local_var.init_value}}
-        </span><br>
-        <span ng-bind-html='indent(1)'></span>
-        where<br>
+        ): {{ret_type}}
+        = {<br>
+          <span ng-bind-html='indent(1)'></span>
+          import scala.annotation.tailrec<br>
 
+          <span ng-bind-html='indent(1)'></span>
+          @tailrec<br>
 
-        <span ng-bind-html='indent(2)'></span>
-        {{func_name}}' {{loop_min}}
-        <span ng-repeat='local_var in local_vars'>
-          {{local_var.name}}
-        </span>
-        = {{ret_val}}<br>
+          <span ng-bind-html='indent(1)'></span>
+          def _{{func_name}}(
+          <span ng-repeat='local_var in local_vars'>
+            {{local_var.name}}: {{local_var.type}}
+            <span ng-hide='$last'>, </span>
+          </span>
+          ):
+          {{ret_type}}
+           =
+          {<br>
+          <span ng-bind-html='indent(2)'></span>
+          if({{while_cond}}) _{{func_name}}(
+            <span ng-repeat='local_var in local_vars'>
+              {{erase_prev(local_var.update_value)}}
+              <span ng-hide='$last'>, </span>
+            </span>
+          )<br>
+          <span ng-bind-html='indent(2)'></span>
+          else {{ret_val}}<br>
 
-        <span ng-bind-html='indent(2)'></span>
-        {{func_name}}' i
-        <span ng-repeat='local_var in local_vars'>
-          {{local_var.name}}
-        </span>
-        = {{func_name}}' (i - {{loop_dec_value}})
-        <span ng-repeat='local_var in local_vars'>
-          ({{erase_prev(local_var.update_value)}})
-        </span>
+          <span ng-bind-html='indent(1)'></span>
+          }<br>
+
+          <span ng-bind-html='indent(1)'></span>
+          _{{func_name}}(
+            <span ng-repeat='local_var in local_vars'>
+                {{local_var.init_value}}
+                <span ng-hide='$last'>, </span>
+            </span>
+          )<br>
+
+        }
       </div>
 
       <div style='border:solid 1px; padding: 10px'>
 
-        // C for confirmation<br>
+        // input confirmation<br>
 
-        int {{func_name}}(
+        def {{func_name}}
+        <span ng-show='type_params.length > 0'>[</span>
+
+
+
+        <span ng-repeat='type_param in type_params'>
+          {{type_param.name}}
+          <span ng-hide='$last'>,</span>
+        </span>
+        <span ng-show='type_params.length > 0'>]</span>
+        (
 
         <span ng-repeat='param in params'>
-          int {{param.name}}
+          {{param.name}}: {{param.type}}
           <span ng-hide='$last'>,</span>
         </span>
 
-        ){<br>
+        ): {{ret_type}}
+        =
+        {<br>
 
         <div ng-repeat='local_var in local_vars'>
           <span ng-bind-html='indent(1)'></span>
-          int {{local_var.name}} = {{local_var.init_value}};
+          var {{local_var.name}}: {{local_var.type}} = {{local_var.init_value}}
         </div>
 
         <span ng-bind-html='indent(1)'></span>
-        for(int i = {{loop_begin}}; i > {{loop_min}}; i -= {{loop_dec_value}}){<br>
+        while({{while_cond}}){<br>
           <!-- prev_xx = xx -->
           <div ng-repeat='local_var in local_vars'>
             <span ng-bind-html='indent(2)'></span>
-            int prev_{{local_var.name}} = {{local_var.name}};
+            val prev_{{local_var.name}} = {{local_var.name}}
           </div>
 
           <!-- Update local vars -->
           <div ng-repeat='local_var in local_vars'>
             <span ng-bind-html='indent(2)'></span>
-            {{local_var.name}} = {{local_var.update_value}};
+            {{local_var.name}} = {{local_var.update_value}}
           </div>
 
         <span ng-bind-html='indent(1)'></span>
         }<br>
 
         <span ng-bind-html='indent(1)'></span>
-        return {{ret_val}};<br>
-      }<br>
+        {{ret_val}}<br>
+        }<br>
 
-    </div>
+      </div>
 
       </code>
   </body>
