@@ -77,8 +77,10 @@ angular.module('APP', ['ngSanitize'])
       {name: "Power(a^n)",    func: load_pow_setting},
       {name: "Factorial(n!)", func: load_fact_setting},
       {name: "Fibonacci",     func: load_fib_setting},
+      {name: 'map ver1',      func: load_map1_setting},
+      {name: 'map ver2',      func: load_map2_setting},
       {name: 'foldLeft',      func: load_foldl_setting},
-      {name: 'foldRight',      func: load_foldr_setting}
+      {name: 'foldRight',     func: load_foldr_setting}
 
     ];
 
@@ -139,6 +141,40 @@ angular.module('APP', ['ngSanitize'])
       ];
       $scope.while_cond = 'i < n';
       $scope.ret_val = 'a';
+    };
+
+    // map1
+    function load_map1_setting(){
+      $scope.func_name = 'map';
+      $scope.type_params = [{name: 'A'},{name: 'B'}];
+      $scope.params = [
+        {name: "seq", type: 'Seq[A]'},
+        {name: "f",  type: 'A => B'}
+      ];
+      $scope.ret_type = 'Seq[B]';
+      $scope.local_vars = [
+        {name: "result", type: 'Seq[B]', init_value: "Seq.empty", update_value: "result :+ f(seq(i))"},
+        {name: "i",  type: 'Int', init_value: "0", update_value: "i + 1"}
+      ];
+      $scope.while_cond = 'i < seq.length'
+      $scope.ret_val = 'result';
+    };
+
+    // map2
+    function load_map2_setting(){
+      $scope.func_name = 'map';
+      $scope.type_params = [{name: 'A'},{name: 'B'}];
+      $scope.params = [
+        {name: "seq", type: 'Seq[A]'},
+        {name: "f",  type: 'A => B'}
+      ];
+      $scope.ret_type = 'Seq[B]';
+      $scope.local_vars = [
+        {name: "result", type: 'Seq[B]', init_value: "Seq.empty", update_value: "result :+ f(rest.head)"},
+        {name: "rest",  type: 'Seq[A]', init_value: "seq", update_value: "rest.tail"}
+      ];
+      $scope.while_cond = 'rest.nonEmpty'
+      $scope.ret_val = 'result';
     };
 
     // foldLeft
