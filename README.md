@@ -3,13 +3,13 @@ for-to-tailrec
 
 Convertor a while-loop to a tail-recursive function
 
-# Demo
-
-![](./demo-images/demo1.gif)
-
 # Page
 
 http://nwtgck.github.io/loop-to-tailrec/
+
+# Demo
+
+![](./demo-images/demo1.gif)
 
 # What is this?
 
