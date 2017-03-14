@@ -88,4 +88,4 @@ def foldLeft [ E , A ] ( seq: Seq[E] , zero: A , f: (A, E) => A ): A = {
 }
 ```
 
-You can access http://nwtgck.github.io/for-to-tailrec/ and try other examples!
+You can access http://nwtgck.github.io/loop-to-tailrec/ and try other examples!
