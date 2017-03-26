@@ -20,6 +20,7 @@
         <select ng-model='current_setting' ng-options="example_setting.name for example_setting in example_settings" ng-change='current_setting.func()'></select>
 
         <div style='border:solid 1px; padding: 10px'>
+          <h2> // Input you a code using a loop</h2>
 
           def <input ng-model='func_name' placeholder='func name' size='8'>
           <span ng-show='type_params.length > 0'>[</span>
@@ -84,6 +85,7 @@
       </div>
 
       <div style='border:solid 1px; padding: 10px; background-color: #F5F6CE'>
+        <h2> // Output - Auto-generated tailrec</h2>
         // Scala(tailrec)<br>
         def {{func_name}}
         <span ng-show='type_params.length > 0'>[</span>
@@ -141,7 +143,7 @@
 
       <div style='border:solid 1px; padding: 10px'>
 
-        // input confirmation<br>
+        <h2>// Input confirmation</h2>
 
         def {{func_name}}
         <span ng-show='type_params.length > 0'>[</span>
