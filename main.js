@@ -73,14 +73,15 @@ angular.module('APP', ['ngSanitize'])
 
     // Example settings
     $scope.example_settings = [
-      {name: "Empty setting", func: load_empty_setting},
-      {name: "Power(a^n)",    func: load_pow_setting},
-      {name: "Factorial(n!)", func: load_fact_setting},
-      {name: "Fibonacci",     func: load_fib_setting},
-      {name: 'map ver1',      func: load_map1_setting},
-      {name: 'map ver2',      func: load_map2_setting},
-      {name: 'foldLeft',      func: load_foldl_setting},
-      {name: 'foldRight',     func: load_foldr_setting}
+      {name: "Empty setting",            func: load_empty_setting},
+      {name: "Power(a^n)",               func: load_pow_setting},
+      {name: "Factorial(n!) - for-like", func: load_fact_for_like_setting},
+      {name: "Factorial(n!) - simple",   func: load_fact_simple_setting},
+      {name: "Fibonacci",                func: load_fib_setting},
+      {name: 'map ver1',                 func: load_map1_setting},
+      {name: 'map ver2',                 func: load_map2_setting},
+      {name: 'foldLeft',                 func: load_foldl_setting},
+      {name: 'foldRight',                func: load_foldr_setting}
 
     ];
 
@@ -112,8 +113,8 @@ angular.module('APP', ['ngSanitize'])
       $scope.ret_val = 'res';
     };
 
-    // factorial
-    function load_fact_setting(){
+    // factorial (for-like)
+    function load_fact_for_like_setting(){
       $scope.func_name = 'fact';
       $scope.type_params = [];
       $scope.params = [{name: "n", type: "Int"}];
@@ -124,6 +125,20 @@ angular.module('APP', ['ngSanitize'])
         {name: "m", type: "Int", init_value: "n", update_value: "m-1"}
       ];
       $scope.while_cond = 'i < n';
+      $scope.ret_val = 'res';
+    };
+
+    // factorial (simple)
+    function load_fact_simple_setting(){
+      $scope.func_name = 'fact';
+      $scope.type_params = [];
+      $scope.params = [{name: "n", type: "Int"}];
+      $scope.ret_type = 'Int';
+      $scope.local_vars = [
+        {name: "res", type: "Int", init_value: "1", update_value: "res*m"},
+        {name: "m", type: "Int", init_value: "n", update_value: "m-1"}
+      ];
+      $scope.while_cond = 'm != 0';
       $scope.ret_val = 'res';
     };
 
