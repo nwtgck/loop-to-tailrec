@@ -25,12 +25,12 @@ def fib ( n: Int ): Int = {
    var a: Int = 1
    var b: Int = 1
    while(i < n){
-     val prev_i = i
-     val prev_a = a
-     val prev_b = b
-     i = i+1
-     a = prev_b
-     b = prev_a+prev_b
+     val newI = i+1
+     val newA = b
+     val newB = a+b
+     i = newI
+     a = newA
+     b = newB
    }
    a
 }
@@ -62,10 +62,10 @@ def foldLeft [ E , A ] ( seq: Seq[E] , zero: A , f: (A, E) => A ): A = {
    var accum: A = zero
    var i: Int = 0
    while(i < seq.length){
-     val prev_accum = accum
-     val prev_i = i
-     accum = f(accum, seq(i))
-     i = i + 1
+     val newAccum = f(accum, seq(i))
+     val newI = i + 1
+     accum = newAccum
+     i = newI
    }
    accum
 }
