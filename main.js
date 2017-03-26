@@ -66,9 +66,8 @@ angular.module('APP', ['ngSanitize'])
     // Function's return-value
     $scope.ret_val = '';
 
-    // Erase prev prefix
-    $scope.erase_prev = function(var_name){
-      return var_name.replace(/prev_/g, '');
+    $scope.to_first_upper = function(name){
+      return name.charAt(0).toUpperCase() + name.slice(1);
     };
 
     // Example settings
@@ -151,8 +150,8 @@ angular.module('APP', ['ngSanitize'])
       $scope.ret_type = 'Int';
       $scope.local_vars = [
         {name: "i", type: "Int", init_value: "0", update_value: "i+1"},
-        {name: "a", type: "Int", init_value: "1", update_value: "prev_b"},
-        {name: "b", type: "Int", init_value: "1", update_value: "prev_a+prev_b"}
+        {name: "a", type: "Int", init_value: "1", update_value: "b"},
+        {name: "b", type: "Int", init_value: "1", update_value: "a+b"}
       ];
       $scope.while_cond = 'i < n';
       $scope.ret_val = 'a';

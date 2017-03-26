@@ -62,16 +62,16 @@
 
           <span ng-bind-html='indent(1)'></span>
           while(<input ng-model='while_cond' placeholder="condition">){<br>
-            <!-- prev_xx = xx -->
-            <div ng-repeat='local_var in local_vars'>
-              <span ng-bind-html='indent(2)'></span>
-              val prev_{{local_var.name}} = {{local_var.name}}
-            </div>
-
             <!-- Update local vars -->
             <div ng-repeat='local_var in local_vars'>
               <span ng-bind-html='indent(2)'></span>
-              {{local_var.name}} = <input ng-model='local_var.update_value'>
+              val new{{to_first_upper(local_var.name)}} = <input ng-model='local_var.update_value'>
+            </div>
+
+            <!-- xx = newXx -->
+            <div ng-repeat='local_var in local_vars'>
+              <span ng-bind-html='indent(2)'></span>
+              {{local_var.name}} = new{{to_first_upper(local_var.name)}}
             </div>
 
           <span ng-bind-html='indent(1)'></span>
@@ -118,7 +118,7 @@
           <span ng-bind-html='indent(2)'></span>
           if({{while_cond}}) _{{func_name}}(
             <span ng-repeat='local_var in local_vars'>
-              {{erase_prev(local_var.update_value)}}
+              {{local_var.update_value}}
               <span ng-hide='$last'>, </span>
             </span>
           )<br>
@@ -171,16 +171,18 @@
 
         <span ng-bind-html='indent(1)'></span>
         while({{while_cond}}){<br>
-          <!-- prev_xx = xx -->
-          <div ng-repeat='local_var in local_vars'>
-            <span ng-bind-html='indent(2)'></span>
-            val prev_{{local_var.name}} = {{local_var.name}}
-          </div>
+
 
           <!-- Update local vars -->
           <div ng-repeat='local_var in local_vars'>
             <span ng-bind-html='indent(2)'></span>
-            {{local_var.name}} = {{local_var.update_value}}
+            val new{{to_first_upper(local_var.name)}} = {{local_var.update_value}}
+          </div>
+
+          <!-- xx = newXx -->
+          <div ng-repeat='local_var in local_vars'>
+            <span ng-bind-html='indent(2)'></span>
+            {{local_var.name}} = new{{to_first_upper(local_var.name)}}
           </div>
 
         <span ng-bind-html='indent(1)'></span>
