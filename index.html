@@ -118,13 +118,20 @@
            =
           {<br>
           <span ng-bind-html='indent(2)'></span>
-          if({{while_cond}}) _{{func_name}}(
+          if({{while_cond}}) {<br>
             <span ng-repeat='local_var in local_vars'>
-              {{local_var.update_value}}
-              <span ng-hide='$last'>, </span>
+              <span ng-bind-html='indent(3)'></span> 
+              val new{{to_first_upper(local_var.name)}} = {{local_var.update_value}}<br>
             </span>
-          )<br>
+            <span ng-bind-html='indent(3)'></span>
+            _{{func_name}}(
+              <span ng-repeat='local_var in local_vars'>
+                new{{to_first_upper(local_var.name)}}
+                <span ng-hide='$last'>, </span>
+              </span>
+            )<br>
           <span ng-bind-html='indent(2)'></span>
+          }
           else {{ret_val}}<br>
 
           <span ng-bind-html='indent(1)'></span>
